@@ -1,0 +1,16 @@
+const express = require('express')
+const { ask } = require('./chat')
+const app = express()
+app.use(express.json())
+
+app.use(express.static('ui'))
+
+app.post('/ask', (req, res) => {
+    const { question } = req.body
+    console.log('question: ' + question)
+    ask(question).then(answer => {
+        res.send({ answer })
+    }).catch(() => { })
+})
+
+app.listen(80)

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>chat anything</title>
+</head>
+
+<body>
+    <p>提问（请不要问涉及隐私的问题，因为会被转发到个人服务器）：</p>
+    <textarea id="words" cols="30" rows="10"></textarea>
+    <button id="btn" onclick="action()">submit</button>
+    <div>回答：<span id="loader" class="hide loading">#</span></div>
+    <div id="ai_says" class="list"></div>
+    <div id="backdrop" class="hide cant-do-anything"></div>
+</body>
+<script>
+    const showLoading = () => {
+        loader.classList.remove('hide')
+        backdrop.classList.remove('hide')
+    }
+    const hideLoading = () => {
+        loader.classList.add('hide')
+        backdrop.classList.add('hide')
+    }
+    function action() {
+        showLoading()
+        ai_says.innerHTML = ''
+        const question = words.value
+        fetch('ask', {
+            method: 'post',
+            headers: { "Content-Type": "application/json", },
+            body: JSON.stringify({ question })
+        })
+            .then(res => res.json())
+            .then(({ answer }) => {
+                ai_says.innerHTML = answer?.replaceAll('\n', '</br>')
+            }).catch(() => {
+                ai_says.innerHTML = 'Error'
+            })
+            .finally(() => {
+                hideLoading()
+            })
+    }
+</script>
+
+<style>
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .hide {
+        display: none;
+    }
+
+    .loading {
+        animation: spin 1s linear infinite;
+        position: absolute;
+    }
+
+    .list {
+        width: 300px;
+        outline: 1px solid orange;
+    }
+
+    .cant-do-anything {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+    }
+</style>
+
+</html>
