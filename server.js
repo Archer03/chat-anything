@@ -1,3 +1,4 @@
+const https = require('https')
 const express = require('express')
 const { ask } = require('./chat')
 const app = express()
@@ -11,6 +12,16 @@ app.post('/ask', (req, res) => {
     ask(question).then(answer => {
         res.send({ answer })
     }).catch(() => { })
+})
+
+app.get('/testVpn', (req, res) => {
+    https.get('https://www.google.com', goo => {
+        goo.on('data', () => {
+            res.end('vpn is working')
+        })
+    }).on('error', () => {
+        res.end('vpn failed')
+    })
 })
 
 app.listen(80)

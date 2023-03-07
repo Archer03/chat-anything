@@ -12,6 +12,7 @@
     <p>提问（请不要问涉及隐私的问题，因为会被转发到个人服务器）：</p>
     <textarea id="words" cols="30" rows="10"></textarea>
     <button id="btn" onclick="action()">submit</button>
+    <button id="test" onclick="testVpn()">test vpn</button>
     <div>回答：<span id="loader" class="hide loading">#</span></div>
     <div id="ai_says" class="list"></div>
     <div id="backdrop" class="hide cant-do-anything"></div>
@@ -51,6 +52,12 @@
             .finally(() => {
                 hideLoading()
             })
+    }
+
+    function testVpn() {
+        fetch('testVpn').then(res => res.text()).then(data => {
+            test.innerHTML = data
+        })
     }
 </script>
 
